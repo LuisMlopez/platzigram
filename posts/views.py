@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render
 
 posts = [
-	{
+    {
         'title': 'Mont Blanc',
         'user': {
             'name': 'Yésica Cortés',
@@ -32,5 +32,6 @@ posts = [
     }
 ]
 
+
 def list_posts(request):
-	return render(request, 'feed.html', {'posts': posts})
+    return render(request, 'posts/feed.html', {'posts': posts})
