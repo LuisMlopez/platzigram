@@ -1,9 +1,50 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head_content %}
 	<title>@{{request.user.username}} Update profile</title>
 {% endblock %}
 
 {% block container %}
-	<h1>@{{request.user.username}}</h1>
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-6 p-4" id="profile-box">
+				<form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+
+					<div class="media">
+						{% if user.profile.picture %}
+							<img src="{{ user.profile.picture.url }}" class="rounded-circle" height="50" />
+						{% else %}
+							<img src="{% static 'img/default-profile.png' %}" class="rounded-circle" height="50" />
+						{% endif %}
+
+						<div class="media-body">
+	                        <h5 class="ml-4">@{{ user.username }} | {{ user.get_full_name }}</h5>
+	                        <p class="ml-4">{{ form.picture }}</p>
+	                    </div>
+
+					</div>
+                	{% for error in form.picture.errors %}
+                    	<div class="alert alert-danger">
+                    		<b>Picture:</b> {{ error }}
+                    	</div>
+                	{% endfor %}
+
+					{# Website #}
+					{% include  "users/form_field.html" with field=form.website %}
+
+					{# Biography #}
+					{% include  "users/form_field.html" with field=form.biography %}
+
+					{# Phone number #}
+					{% include  "users/form_field.html" with field=form.phone_number %}
+
+					<button class="btn btn-primary btn-block mt-5" type="submit">Save</button>
+
+					
+				</form> 
+			</div>
+		</div>
+	</div>
 {% endblock%}

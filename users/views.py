@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from users.forms import CreateUserForm
+from users.forms import CreateUserForm, ProfileForm
 from users.models import Profile
 
 
@@ -50,14 +50,34 @@ def signup(request):
 
             login(request, user)
             return redirect('posts_list')
-        else:
-            return render(request, 'users/signup.html',
-                          {'form': form})
 
-    form = CreateUserForm()
+    else:
+        form = CreateUserForm()
+
     return render(request, 'users/signup.html', {'form': form})
 
 
 @login_required
 def update_profile(request):
-    return render(request, 'users/update_profile.html')
+    if request.method == 'POST':
+        form = ProfileForm(
+            request.POST,
+            request.FILES,
+            instance=request.user.profile
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect('update_profile')
+
+    else:
+        form = ProfileForm(instance=request.user.profile)
+
+    return render(
+        request,
+        'users/update_profile.html',
+        {
+            'form': form,
+            'user': request.user
+        }
+    )
