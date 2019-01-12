@@ -56,3 +56,8 @@ def signup(request):
 
     form = CreateUserForm()
     return render(request, 'users/signup.html', {'form': form})
+
+
+@login_required
+def update_profile(request):
+    return render(request, 'users/update_profile.html')
