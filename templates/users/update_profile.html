@@ -32,13 +32,13 @@
                 	{% endfor %}
 
 					{# Website #}
-					{% include  "users/form_field.html" with field=form.website %}
+					{% include  "partials/form_field.html" with field=form.website %}
 
 					{# Biography #}
-					{% include  "users/form_field.html" with field=form.biography %}
+					{% include  "partials/form_field.html" with field=form.biography %}
 
 					{# Phone number #}
-					{% include  "users/form_field.html" with field=form.phone_number %}
+					{% include  "partials/form_field.html" with field=form.phone_number %}
 
 					<button class="btn btn-primary btn-block mt-5" type="submit">Save</button>
 
