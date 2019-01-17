@@ -54,6 +54,16 @@ class CreateUserForm(forms.Form):
 
         return username
 
+    def save(self):
+        data = self.cleaned_data
+        data.pop('password_confirmation')
+
+        self.instance = User.objects.create_user(**data)
+
+        user_profile = Profile.objects.create(user=self.instance)
+
+        return self.instance
+
 
 class ProfileForm(forms.ModelForm):
     website = forms.URLField(

@@ -38,17 +38,9 @@ def signup(request):
         form = CreateUserForm(request.POST)
 
         if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data.get('username'),
-                email=form.cleaned_data.get('email'),
-                password=form.cleaned_data.get('password'),
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name')
-            )
+            form.save()
 
-            user_profile = Profile.objects.create(user=user)
-
-            login(request, user)
+            login(request, form.instance)
             return redirect('posts_list')
 
     else:
