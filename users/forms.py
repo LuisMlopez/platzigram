@@ -46,6 +46,14 @@ class CreateUserForm(forms.Form):
 
         return cleaned_data
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+
+        if User.objects.filter(username=username).exists():
+            self.add_error('username', _('Username already exists.'))
+
+        return username
+
 
 class ProfileForm(forms.ModelForm):
     website = forms.URLField(
