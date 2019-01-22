@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
 
 from users.forms import CreateUserForm, ProfileForm
 from users.models import Profile
@@ -49,6 +51,23 @@ def signup(request):
     return render(request, 'users/signup.html', {'form': form})
 
 
+class UserProfile(DetailView, LoginRequiredMixin):
+    model = User
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+    template_name = 'users/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        user = self.get_object()
+        if user:
+            posts = user.post_set.all()
+            context.update({'posts': posts})
+
+        context.update(kwargs)
+        return super().get_context_data(**context)
+
+
 @login_required
 def update_profile(request):
     if request.method == 'POST':
@@ -60,7 +79,11 @@ def update_profile(request):
 
         if form.is_valid():
             form.save()
-            return redirect('update_profile')
+            url = reverse(
+                'profile',
+                kwargs={'username': request.user.username}
+            )
+            return redirect(url)
 
     else:
         form = ProfileForm(instance=request.user.profile)

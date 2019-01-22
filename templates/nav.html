@@ -10,7 +10,7 @@
             <ul class="navbar-nav mr-auto">
 
                 <li class="nav-item">
-                    <a href="{% url 'update_profile' %}">
+                    <a href="{% url 'profile' username=request.user.username %}">
                         {% if request.user.profile.picture %}
                             <img
                                 src="{{ request.user.profile.picture.url }}" 
